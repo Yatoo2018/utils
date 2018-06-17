@@ -1,10 +1,10 @@
 <template>
   <el-container v-loading="loading">
-    <el-header>我的常用功能函数</el-header>
+    <el-header class="header">我的常用功能函数</el-header>
     <el-main>
       <el-collapse  v-for="article in articles" v-model="activeNames" @change="handleChange" :key="article.id">
         <el-collapse-item :class="['page-article', 'page-' + article.id]" :title="article.title" :name="article.id">
-          <format-float></format-float>
+          <component class="article-content" :is="article.component"></component>
         </el-collapse-item>
       </el-collapse>
     </el-main>
@@ -14,6 +14,7 @@
 
 <script>
 import FormatFloat from './articles/FormatFloat'
+import GoodsShow from './articles/shop/GoodsShow'
 import articls from '../assets/mock/articles.json'
 export default {
   name: 'Index',
@@ -25,7 +26,8 @@ export default {
     }
   },
   components: {
-    FormatFloat
+    FormatFloat,
+    GoodsShow
   },
   mounted () {
     this.loading = false
@@ -55,4 +57,11 @@ export default {
   a {
     color: #42b983;
   }
+  .header,.page-article{
+    text-align: center;
+  }
+  .article-content{
+    text-align: left;
+  }
+
 </style>

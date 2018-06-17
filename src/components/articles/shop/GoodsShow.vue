@@ -15,7 +15,7 @@
         <span>尺寸</span>
       </div>
       <el-radio-group v-model="size">
-        <el-radio-button v-for="s in sizes" @click="clickItem(s, 'size')" :label="s.name" :name="s.name" :disbaled="s.isEnable" :key="s.name"></el-radio-button>
+        <el-radio-button v-for="s in sizes" @click.native.prevent="clickItem(s, 'size')" :label="s._name" name="size" :disabled="!s.isEnable" :key="s.name"></el-radio-button>
       </el-radio-group>
     </el-card>
     <el-card class="box-card">
@@ -23,11 +23,17 @@
         <span>颜色</span>
       </div>
       <el-radio-group v-model="color">
-        <el-radio-button v-for="s in colors" @click="clickItem(s, 'color')" :label="s.name" :disbaled="s.isEnable" :key="s.name"></el-radio-button>
+        <el-radio-button v-for="s in colors" @click.native.prevent="clickItem(s, 'color')" :label="s._name" name="color" :disabled="!s.isEnable" :key="s.name"></el-radio-button>
       </el-radio-group>
     </el-card>
-    <el-input-number v-model="buyNum" :min="1" :max="10" label="数量"></el-input-number>
-    <el-input-number :value="current" :disabled="true" label="库存"></el-input-number>
+    <el-form :inline="true">
+      <el-form-item label="数量">
+        <el-input-number v-model="buyNum" :min="1" :max="10" label="数量"></el-input-number>
+      </el-form-item>
+      <el-form-item label="库存">
+        <el-input-number :value="current" :disabled="true" label="库存"></el-input-number>
+      </el-form-item>
+    </el-form>
   </div>
 
 </template>
@@ -68,7 +74,9 @@ export default {
   },
   methods: {
     check (item, attrs) {
-      return [...attrs].every(attr => attr.value ? item[name] === attr.value : true)
+      return [...attrs].every(attr => {
+        return attr.value ? item[attr.name] === attr.value : true
+      })
     },
     getGoodsByAttrs (attrs) {
       return [...this.showData.goodlist.values()].filter(item => {
@@ -76,30 +84,38 @@ export default {
       })
     },
     clickItem (item, attr) {
-      console.log('click')
+      if (!item.isEnable) return
       if (item.isSelect) {
         this[attr] = ''
       } else {
-        this[attr] = item.name
+        this[attr] = item._name
       }
       this.toggle(item, attr)
       this.update(attr)
     },
     toggle (item, attr) {
-      item[attr] = !item[attr]
+      this[attr + 's'].map(o => (o.isSelect = false))
+      item.isSelect = !item.isSelect
     },
     update (attr) {
       let attrs = [{name: attr, value: this[attr]}]
       let temps = this.getGoodsByAttrs(attrs)
 
       this.attrs.map(item => {
-        if (item === attr) return ''
-        this[attr + 's'].map(o => {
-          o.isEnable = temps.filter(t => t[attr] === o.name).length > 0
-          if (!o.isEnable) o.isSelect = false
-        })
+        if (item === attr) { // 同一面板
+          this[item + 's'].map(o => {
+            o.isEnable = true
+          })
+        } else { // 其他属性面板联动
+          this[item + 's'].map(o => {
+            o.isEnable = temps.filter(t => t[item] === o._name).length > 0
+            if (!o.isEnable) o.isSelect = false
+          })
+        }
       })
-      console.log(this.colors, this.sizes)
+      console.table([...this.colors])
+      console.table([...this.sizes])
+      console.table([...this.showData.goodlist.values()])
     }
   }
 }

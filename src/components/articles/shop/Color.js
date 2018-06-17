@@ -21,7 +21,8 @@ class Color extends Item {
     super({isSelect, isEnable})
     this.id = colorId++
     this._name = name
-    this.name = getType('color', name)
+    this.name = name
+    this.type = getType('color', name)
   }
 }
 class ColorList extends List {
@@ -31,7 +32,7 @@ class ColorList extends List {
   }
   init (arr) {
     arr.map(item => {
-      this.add(new Color({name: item, isSelect: false, isEnable: false}))
+      this.add(new Color({name: item, isSelect: false, isEnable: true}))
     })
   }
 }

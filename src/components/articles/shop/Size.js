@@ -20,7 +20,8 @@ class Size extends Item {
     super({isSelect, isEnable})
     this.id = colorId++
     this.name = name
-    this._name = getType('size', name)
+    this._name = name
+    this.type = getType('size', name)
   }
 }
 class SizeList extends List {
@@ -30,7 +31,7 @@ class SizeList extends List {
   }
   init (arr) {
     arr.map(item => {
-      this.add(new Size({name: item, isSelect: false, isEnable: false}))
+      this.add(new Size({name: item, isSelect: false, isEnable: true}))
     })
   }
 }

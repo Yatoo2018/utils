@@ -10,9 +10,8 @@
  * 修改时间: xxx
  * 修改人名: xxx
  */
-export class Item extends Object {
+export class Item {
   constructor ({isSelect, isEnable}) {
-    super()
     this._isSelect = isSelect
     this._isEnable = isEnable
   }

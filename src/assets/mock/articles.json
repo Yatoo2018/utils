@@ -1,6 +1,12 @@
 [
   {
     "id": 0,
-    "title": "获取浮点数的二进制字符串工具"
+    "title": "获取浮点数的二进制字符串工具",
+    "component": "format-float"
+  },
+  {
+    "id": 1,
+    "title": "商品展示页属性切换效果",
+    "component": "goods-show"
   }
 ]
